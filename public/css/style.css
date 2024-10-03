@@ -357,7 +357,7 @@ ul {
   z-index: 1;
   /* SATELIOT */
   /* top: var(--top-menu-height); */
-  top: 59px;
+  top: 59px; /* TODO: This will create a gap on some screen sizes since the top menu height is not fixed */
   bottom: 250px;
   max-height: 20%;
   /* border-width: 0px 0px 5px 0px; */
@@ -991,7 +991,6 @@ input:focus {
 #datetime-text {
   font-family: 'Roboto Mono', monospace;
   font-size: 20px;
-  cursor: pointer;
   border-width: 0px;
 }
 
@@ -1020,9 +1019,6 @@ input:focus {
 }
 
 #sensor-selected-container:hover,
-#datetime-text:hover {
-  background: rgba(255, 255, 255, 0.1);
-}
 
 #sensor-selected-container {
   display: none;

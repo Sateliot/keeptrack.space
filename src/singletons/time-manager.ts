@@ -15,7 +15,6 @@ export class TimeManager {
    * The real time at the moment when dynamicOffset or propRate changes
    */
   dynamicOffsetEpoch = <number>null;
-  private iText = <number>null;
   lastPropRate = <number>1;
   /**
    * Time in Milliseconds the last time sim time was updated
@@ -43,12 +42,10 @@ export class TimeManager {
    * The time offset ignoring propRate (ex. New Launch)
    */
   staticOffset = 0;
-  private simulationTimeSerialized_ = <string>null;
   timeTextStr = <string>null;
   /**
    * Reusable empty text string to reduce garbage collection
    */
-  private timeTextStrEmpty_ = <string>null;
   lastBoxUpdateTime = <Milliseconds>0;
   /**
    * dynamicOffset: The time offset that is impacted by propRate
@@ -157,7 +154,6 @@ export class TimeManager {
     this.simulationTimeObj = new Date();
 
     this.timeTextStr = '';
-    this.timeTextStrEmpty_ = '';
 
     this.propFrozen = Date.now(); // for when propRate 0
     this.realTime = <Milliseconds>this.propFrozen; // (initialized as Date.now)
@@ -207,13 +203,27 @@ export class TimeManager {
     // This function only applies when datetime plugin is enabled
     if (settingsManager.plugins.datetime) {
       if (this.lastTime - this.simulationTimeObj.getTime() < <Milliseconds>300) {
-        this.simulationTimeSerialized_ = this.simulationTimeObj.toJSON();
-        this.timeTextStr = this.timeTextStrEmpty_;
-        for (this.iText = 11; this.iText < 20; this.iText++) {
-          if (this.iText > 11) {
-            this.timeTextStr += this.simulationTimeSerialized_[this.iText - 1];
-          }
-        }
+        this.timeTextStr = this.simulationTimeObj.toLocaleDateString('en-US', {
+          year: '2-digit', // Fixing to 2-digits will avoid layout shifts
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false, // 12 hour or 24 hour time?
+          timeZoneName: 'short',
+        });
+
+        // Remove the comma separating the date and time to keep it short
+        this.timeTextStr = this.timeTextStr.replace(',', '');
+
+        // this.simulationTimeSerialized_ = this.simulationTimeObj.toJSON();
+        // this.timeTextStr = this.timeTextStrEmpty_;
+        // for (this.iText = 11; this.iText < 20; this.iText++) {
+        //   if (this.iText > 11) {
+        //     this.timeTextStr += this.simulationTimeSerialized_[this.iText - 1];
+        //   }
+        // }
         this.propRate0 = this.propRate;
         settingsManager.isPropRateChange = false;
       }
@@ -233,7 +243,7 @@ export class TimeManager {
       }
 
       // textContent doesn't remove the Node! No unecessary DOM changes everytime time updates.
-      this.dateDOM.textContent = this.timeTextStr + ' (UTC)';
+      this.dateDOM.textContent = this.timeTextStr;
 
       // Load the current JDAY
       const jday = getDayOfYear(this.simulationTimeObj);

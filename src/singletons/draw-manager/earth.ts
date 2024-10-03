@@ -626,7 +626,7 @@ export class Earth {
     const float latitudeCenter = 67.5; // The latitude at which the Aurora Borealis appears
     const float latitudeMargin = 7.0; // The margin around the center latitude where the Aurora Borealis is visible
     const vec3 directionalLightColor = vec3(1.0, 1.0, 1.0);
-    const vec3 ambientLightColor = vec3(0.1, 0.1, 0.1);
+    const vec3 ambientLightColor = vec3(0.15, 0.15, 0.15);
 
     // Function to calculate the intensity of the Aurora Borealis at a given latitude
     float calculateAuroraIntensity(float latitude, float noise) {
@@ -651,7 +651,7 @@ export class Earth {
 
         //................................................
         // Specular lighting
-        vec3 specLightColor = texture(uSpecMap, vUv).rgb * diffuse * 0.1;
+        vec3 specLightColor = texture(uSpecMap, vUv).rgb * diffuse * 0.2;
 
         //................................................
         // Final color
